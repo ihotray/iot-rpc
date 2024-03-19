@@ -192,7 +192,7 @@ function M.call(req)
         return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
     end
 
-    return rpc.call(mod, func, args, req.topic) --topic 用于异步回复, 可用于websocket场景
+    return rpc.call(mod, func, args, {username = req.username, topic = req.topic}) --topic 用于异步回复, 可用于websocket场景
 
 end
 

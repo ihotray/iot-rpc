@@ -24,8 +24,8 @@ M.result_response = function(method, data)
     })
 end
 
-function M.call(mod, func, args, topic)
-    
+function M.call(mod, func, args, ext)
+
     local script = '/usr/share/iot/rpc/' .. mod .. '.lua'
     local ok, funcs = pcall(dofile, script)
     if not ok then
@@ -36,7 +36,7 @@ function M.call(mod, func, args, topic)
         return M.error_response(mod, M.ERROR_CODE_INVALID_PARAMS)
     end
 
-    return funcs[func](args, topic)
+    return funcs[func](args, ext)
 end
 
 return M
