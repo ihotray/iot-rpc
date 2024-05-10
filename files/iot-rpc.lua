@@ -3,17 +3,12 @@ local uci = require 'uci'
 local rpc = require 'iot.rpc'
 local md5 = require 'iot.md5'
 
-
 local M = {}
 
 local function random_string(n)
-    local t = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-    }
+    local t = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+               'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F',
+               'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}
     local s = {}
     for i = 1, n do
         s[#s + 1] = t[math.random(#t)]
@@ -73,7 +68,7 @@ function M.login(req)
             end
 
             local md5ctx = md5.new()
-            md5ctx:hash(s.password..':'..nonce)
+            md5ctx:hash(s.password .. ':' .. nonce)
             if password == md5ctx:done() then
                 valid = true
                 return false
@@ -88,7 +83,10 @@ function M.login(req)
     end
 
     local token = random_string(32)
-    return rpc.result_response(req.method, {token = token, username = username})
+    return rpc.result_response(req.method, {
+        token = token,
+        username = username
+    })
 
 end
 
@@ -120,12 +118,14 @@ function M.init_password(req)
     end
 
     local md5ctx = md5.new()
-    md5ctx:hash(username..':'..password)
+    md5ctx:hash(username .. ':' .. password)
     c:set('iot', id, 'password', md5ctx:done())
     local res = c:commit('iot')
 
     local token = random_string(32)
-    return rpc.result_response(req.method, {token = token})
+    return rpc.result_response(req.method, {
+        token = token
+    })
 
 end
 
@@ -147,16 +147,19 @@ function M.is_inited(req)
         end
     end)
 
-    return rpc.result_response(req.method, {inited = inited})
+    return rpc.result_response(req.method, {
+        inited = inited
+    })
 end
-
 
 function M.get_locale(req)
     req = cjson.decode(req)
     local c = uci.cursor()
     local locale = c:get('iot', 'global', 'locale')
 
-    return rpc.result_response(req.method, { locale = locale })
+    return rpc.result_response(req.method, {
+        locale = locale
+    })
 
 end
 
@@ -192,12 +195,25 @@ function M.call(req)
         return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
     end
 
-    return rpc.call(mod, func, args, {username = req.username, topic = req.topic, client = req.client}) --topic 用于异步回复, 可用于websocket场景
+    return rpc.call(mod, func, args, {
+        username = req.username,
+        topic = req.topic,
+        client = req.client
+    }) -- topic 用于异步回复, 可用于websocket场景
 
 end
 
 function M.board_info(req)
-    return M.call(req)
+    --- for test only
+    req = cjson.decode(req)
+
+    if req == nil or req.method == nil then
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
+    end
+    return rpc.result_response(req.method, {
+        board = 'iot',
+        version = '1.0.0'
+    })
 end
 
 return M
