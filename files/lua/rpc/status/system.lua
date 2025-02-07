@@ -79,7 +79,7 @@ function M.get_log()
     local f = io.popen('logread -l 50', 'r')
     if f then
         for line in f:lines() do
-            local date, content = line:match("^(%a+ %a+ %d+ %d+:%d+:%d+ %d+) +(.+)$")
+            local date, content = line:match("^(%a+ +%a+ +%d+ +%d+:%d+:%d+ %d+) +(.+)$")
             if date and content then
                 local entry = {
                     date = date,
