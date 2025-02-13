@@ -1,11 +1,12 @@
 local rpc = require 'iot.rpc'
 local fs = require 'iot.fs'
 local cjson = require 'cjson.safe'
+local ubus = require 'ubus'
 
 local M = {}
 
 function M.get_info()
-    local releas_file = '/etc/openwrt_release'
+    local release_file = '/etc/openwrt_release'
     local data = fs.readfile(releas_file)
     local version = data:match("DISTRIB_RELEASE='(%S+)'")
 

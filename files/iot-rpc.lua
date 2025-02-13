@@ -36,7 +36,7 @@ function M.challenge(req)
     end)
 
     if not found then
-        return rpc.error_response(req.method, rpc.ERROR_COED_INVALID_USERNAME_PASSWORD)
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_USERNAME_PASSWORD)
     end
 
     local nonce = random_string(32)
@@ -79,7 +79,7 @@ function M.login(req)
     end)
 
     if not valid then
-        return rpc.error_response(req.method, rpc.ERROR_COED_INVALID_USERNAME_PASSWORD)
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_USERNAME_PASSWORD)
     end
 
     local token = random_string(32)
@@ -114,7 +114,7 @@ function M.init_password(req)
 
     -- password is not blank
     if not valid then
-        return rpc.error_response(req.method, rpc.ERROR_COED_INVALID_USERNAME_PASSWORD)
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_USERNAME_PASSWORD)
     end
 
     local md5ctx = md5.new()
