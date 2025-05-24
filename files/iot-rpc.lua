@@ -20,6 +20,11 @@ end
 
 function M.challenge(req)
     req = cjson.decode(req)
+
+    if req == nil or req.param == nil then
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
+    end
+
     local username = req.param.username
 
     if type(username) ~= 'string' then
@@ -52,6 +57,11 @@ end
 
 function M.login(req)
     req = cjson.decode(req)
+
+    if req == nil or req.param == nil then
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
+    end
+
     local username = req.param.username
     local password = req.param.password
     local nonce = req.param.nonce
@@ -93,6 +103,11 @@ end
 
 function M.init_password(req)
     req = cjson.decode(req)
+
+    if req == nil or req.param == nil then
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
+    end
+
     local username = req.param.username
     local password = req.param.password
 
@@ -132,6 +147,10 @@ end
 
 function M.is_inited(req)
     req = cjson.decode(req)
+    if req == nil or req.param == nil then
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
+    end
+
     local username = req.param.username
     if type(username) ~= 'string' then
         return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
@@ -167,7 +186,12 @@ end
 function M.set_locale(req)
     req = cjson.decode(req)
 
+    if req == nil or req.param == nil then
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
+    end
+
     local c = uci.cursor()
+
     local locale = req.param.locale
     if type(locale) ~= 'string' then
         return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
@@ -181,6 +205,10 @@ end
 
 function M.call(req)
     req = cjson.decode(req)
+
+    if req == nil or req.param == nil then
+        return rpc.error_response(req.method, rpc.ERROR_CODE_INVALID_PARAMS)
+    end
 
     local param = req.param
 
